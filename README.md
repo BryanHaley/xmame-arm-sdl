@@ -2,7 +2,7 @@
  XMAME-ARM-SDL README
  *********************
  
- **BUILD**
+**BUILD**
  
  The instructions for building and running xmame-arm-sdl are almost the same as [xmame-arm](https://www.anavi.org/article/204/).
  
@@ -23,7 +23,7 @@
  
  `make`
  
- **RUN**
+**RUN**
  
  Run games the same way you would MAME 0.106 via the command line. Theoritically, it may even be compatible with existing MAME front-ends, provided they can be successfully built on armhf Debian. I have not tested any at this time.
  
@@ -53,15 +53,19 @@
  
  `./xmame.SDL -fullscreen -scale 2 -fsr 1 ./supertnk.zip`
  
- **KNOWN ISSUES**
+**KNOWN ISSUES**
  
  * Sound is relatively quiet by default. Turn your volume up and/or boost the volume within MAME. I will investigate a better fix later.
  * Scaling the game display to a higher resolution than your CHIP is running at will cause an exeption. In addition, currently the game display can only scale by integer values. This is particularly a problem on composite displays, as most games run at a resolution just slightly higher than half the CHIP's resolution, meaning they cannot be scaled up and also only take up a relatively small amount of the screen (see planned features). Therefore, use VGA or HDMI if possible.
  
- **PLANNED FEATURES**
+**PLANNED FEATURES**
  
  * Allow non-integer display scaling. Though not ideal as it may make images blurry, this will improve compatibility greatly with composite displays.
  * Add the ability to use buttons connected to GPIO pins as in-game inputs.
+ 
+**NOTE**
+
+Xmame-arm-sdl derives from MAME 0.106. You will need MAME 0.106 compatible ROMs. It is possible to convert ROMs for newer versions of MAME to be compatible for 0.106 using clrmamepro.
 
  *********************
  ORIGINAL XMAME/XMESS README
