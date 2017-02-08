@@ -6,18 +6,18 @@
  
  The instructions for building and running xmame-arm-sdl are almost the same as [xmame-arm](https://www.anavi.org/article/204/).
  
- 1. Open the terminal
- 2. Install necessary packages
+ * Open the terminal
+ * Install necessary packages
  
  `sudo apt-get update`
  
  `sudo apt-get install -y build-essential libgtk2.0-dev libgnome2-dev libsdl1.2-dev libxv-dev libxv1 git`
  
- 3. Clone this repository
+ * Clone this repository
  
  `git clone https://github.com/BryanHaley/xmame-arm-sdl.git`
  
- 4. Build the executable (this may take several hours)
+ * Build the executable (this may take several hours)
  
  `cd xmame-arm-sdl`
  
@@ -40,10 +40,10 @@
  Many of the commandline arguments for MAME 0.106 *should* work. Run './xmame.SDL -help | more' to see them.
  
  Of particular note:
- * Use `-fullscreen` to run the game in fullscreen mode.
- * Use `-scale <int>` (e.g. '-scale 2') to scale the display (see known issues).
- * Use `-fsr 1` to enable the enhanced frameskipper. This can reduce slowdown in some games.
- * Use `-joytype 5` to enable the usage of SDL-compatible gamepads/controllers/etc.
+ + Use `-fullscreen` to run the game in fullscreen mode.
+ + Use `-scale <int>` (e.g. '-scale 2') to scale the display (see known issues).
+ + Use `-fsr 1` to enable the enhanced frameskipper. This can reduce slowdown in some games.
+ + Use `-joytype 5` to enable the usage of SDL-compatible gamepads/controllers/etc.
  
  So, for example:
  
