@@ -1,44 +1,44 @@
  *********************
- **  XMAME-ARM-SDL  **
+ XMAME-ARM-SDL README
  *********************
  
  **BUILD**
  
- The instructions for building and running xmame-arm-sdl are almost the same as xmame-arm.
+ The instructions for building and running xmame-arm-sdl are almost the same as [xmame-arm](https://www.anavi.org/article/204/).
  
  1. Open the terminal
  2. Install necessary packages
- 'sudo apt-get update'
- 'sudo apt-get install -y build-essential libgtk2.0-dev libgnome2-dev libsdl1.2-dev libxv-dev libxv1 git'
+ `sudo apt-get update`
+ `sudo apt-get install -y build-essential libgtk2.0-dev libgnome2-dev libsdl1.2-dev libxv-dev libxv1 git`
  3. Clone this repository
- 'git clone https://github.com/BryanHaley/xmame-arm-sdl.git'
+ `git clone https://github.com/BryanHaley/xmame-arm-sdl.git`
  4. Build the executable (this may take several hours)
- 'cd xmame-arm-sdl'
- 'make'
+ `cd xmame-arm-sdl`
+ `make`
  
  **RUN**
  
  Run games the same way you would MAME 0.106 via the command line. Theoritically, it may even be compatible with existing MAME front-ends, provided they can be successfully built on armhf Debian. I have not tested any at this time.
  
  You can download a free, noncommercial ROM from mame.net to test. For example:
- 'cd ~/xmame-arm-sdl'
- 'wget -P roms www.mame.net/roms/supertnk/supertnk.zip'
+ `cd ~/xmame-arm-sdl`
+ `wget -P roms www.mame.net/roms/supertnk/supertnk.zip`
  
  To run it:
- './xmame.SDL ./supertnk.zip'
+ `./xmame.SDL ./supertnk.zip`
  
  Many of the commandline arguments for MAME 0.106 *should* work. Run './xmame.SDL -help | more' to see them.
  
  Of particular note:
- Use '-fullscreen' to run the game in fullscreen mode.
- Use '-scale <int>' (e.g. '-scale 2') to scale the display (see known issues).
- Use '-fsr 1' to enable the enhanced frameskipper. This can reduce slowdown in some games.
- Use '-joytype 5' to enable the usage of SDL-compatible gamepads/controllers/etc.
+ Use `-fullscreen` to run the game in fullscreen mode.
+ Use `-scale <int>` (e.g. '-scale 2') to scale the display (see known issues).
+ Use `-fsr 1` to enable the enhanced frameskipper. This can reduce slowdown in some games.
+ Use `-joytype 5` to enable the usage of SDL-compatible gamepads/controllers/etc.
  
  So, for example:
- './xmame.SDL -fullscreen -fsr 1 ./supertnk.zip'
+ `./xmame.SDL -fullscreen -fsr 1 ./supertnk.zip`
  Or, if you have a large enough display (e.g. over VGA or HDMI):
- './xmame.SDL -fullscreen -scale 2 -fsr 1 ./supertnk.zip'
+ `./xmame.SDL -fullscreen -scale 2 -fsr 1 ./supertnk.zip`
  
  **KNOWN ISSUES**
  
@@ -51,15 +51,11 @@
  2. Add the ability to use buttons connected to GPIO pins as in-game inputs.
 
  *********************
- ** XMAME / XMESS **
+ ORIGINAL XMAME/XMESS README
  *********************
-
- -------------
 
  Quick Readme by Matt Lowry
  Last Updated : 12th April 2001
-
- -------------
 
 Q: What is xmame?
 Q: What is xmess?
