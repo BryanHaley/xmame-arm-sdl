@@ -56,7 +56,7 @@ Or, if you have a large enough display (e.g. over VGA or HDMI):
 **KNOWN ISSUES**
  
  * Sound is relatively quiet by default. Turn your volume up and/or boost the volume within MAME. I will investigate a better fix later.
- * Scaling the game display to a higher resolution than your CHIP is running at will cause an exeption. In addition, currently the game display can only scale by integer values. This is particularly a problem on composite displays, as most games run at a resolution just slightly higher than half the CHIP's resolution, meaning they cannot be scaled up and also only take up a relatively small amount of the screen (see planned features). Therefore, use VGA or HDMI if possible.
+ * Scaling the game display to a higher resolution than your CHIP is running at will cause an exception. In addition, currently the game display can only scale by integer values. This is particularly a problem on composite displays, as most games run at a resolution just slightly higher than half the CHIP's resolution, meaning they cannot be scaled up and also only take up a relatively small amount of the screen (see planned features). Therefore, use VGA or HDMI if possible, or don't use fullscreen mode.
  
 **PLANNED FEATURES**
  
