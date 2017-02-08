@@ -40,16 +40,16 @@
  Many of the commandline arguments for MAME 0.106 *should* work. Run './xmame.SDL -help | more' to see them.
  
  Of particular note:
- + Use `-fullscreen` to run the game in fullscreen mode.
- + Use `-scale <int>` (e.g. '-scale 2') to scale the display (see known issues).
- + Use `-fsr 1` to enable the enhanced frameskipper. This can reduce slowdown in some games.
- + Use `-joytype 5` to enable the usage of SDL-compatible gamepads/controllers/etc.
++ Use `-fullscreen` to run the game in fullscreen mode.
++ Use `-scale <int>` (e.g. '-scale 2') to scale the display (see known issues).
++ Use `-fsr 1` to enable the enhanced frameskipper. This can reduce slowdown in some games.
++ Use `-joytype 5` to enable the usage of SDL-compatible gamepads/controllers/etc.
  
- So, for example:
+So, for example:
  
  `./xmame.SDL -fullscreen -fsr 1 ./supertnk.zip`
  
- Or, if you have a large enough display (e.g. over VGA or HDMI):
+Or, if you have a large enough display (e.g. over VGA or HDMI):
  
  `./xmame.SDL -fullscreen -scale 2 -fsr 1 ./supertnk.zip`
  
