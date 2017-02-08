@@ -1,3 +1,54 @@
+ *********************
+ **  XMAME-ARM-SDL  **
+ *********************
+ 
+ **BUILD**
+ 
+ The instructions for building and running xmame-arm-sdl are almost the same as xmame-arm.
+ 
+ 1. Open the terminal
+ 2. Install necessary packages
+ 'sudo apt-get update'
+ 'sudo apt-get install -y build-essential libgtk2.0-dev libgnome2-dev libsdl1.2-dev libxv-dev libxv1 git'
+ 3. Clone this repository
+ 'git clone https://github.com/BryanHaley/xmame-arm-sdl.git'
+ 4. Build the executable (this may take several hours)
+ 'cd xmame-arm-sdl'
+ 'make'
+ 
+ **RUN**
+ 
+ Run games the same way you would MAME 0.106 via the command line. Theoritically, it may even be compatible with existing MAME front-ends, provided they can be successfully built on armhf Debian. I have not tested any at this time.
+ 
+ You can download a free, noncommercial ROM from mame.net to test. For example:
+ 'cd ~/xmame-arm-sdl'
+ 'wget -P roms www.mame.net/roms/supertnk/supertnk.zip'
+ 
+ To run it:
+ './xmame.SDL ./supertnk.zip'
+ 
+ Many of the commandline arguments for MAME 0.106 *should* work. Run './xmame.SDL -help | more' to see them.
+ 
+ Of particular note:
+ Use '-fullscreen' to run the game in fullscreen mode.
+ Use '-scale <int>' (e.g. '-scale 2') to scale the display (see known issues).
+ Use '-fsr 1' to enable the enhanced frameskipper. This can reduce slowdown in some games.
+ Use '-joytype 5' to enable the usage of SDL-compatible gamepads/controllers/etc.
+ 
+ So, for example:
+ './xmame.SDL -fullscreen -fsr 1 ./supertnk.zip'
+ Or, if you have a large enough display (e.g. over VGA or HDMI):
+ './xmame.SDL -fullscreen -scale 2 -fsr 1 ./supertnk.zip'
+ 
+ **KNOWN ISSUES**
+ 
+ 1. Sound is relatively quiet by default. Turn your volume up and/or boost the volume within MAME. I will investigate a better fix later.
+ 2. Scaling the game display to a higher resolution than your CHIP is running at will cause an exeption. In addition, currently the game display can only scale by integer values. This is particularly a problem on composite displays, as most games run at a resolution just slightly higher than half the CHIP's resolution, meaning they cannot be scaled up and also only take up a relatively small amount of the screen (see planned features). Therefore, use VGA or HDMI if possible.
+ 
+ **PLANNED FEATURES**
+ 
+ 1. Allow non-integer display scaling. Though not ideal as it may make images blurry, this will improve compatibility greatly with composite displays.
+ 2. Add the ability to use buttons connected to GPIO pins as in-game inputs.
 
  *********************
  ** XMAME / XMESS **
