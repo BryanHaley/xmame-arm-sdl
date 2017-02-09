@@ -116,8 +116,8 @@ struct rc_option video_opts[] = {
      "1",		0.75f,			8,		NULL,
      "Set Y-Scale factor (increase: left-shift + home, decrease: left-shift + end)" },
    { "scale",		"s",			rc_use_function, NULL,
-     NULL,		0.75f,			8,		video_handle_scale,
-     "Set X- and Y-Scale to the same factor. Valid inputs are any integer (whole number), or 0.75, 1.25, 1.5, 1.75, or 4.5" },
+     NULL,		0,			0,		video_handle_scale,
+     "Set X- and Y-Scale to the same factor. Valid inputs are any integer (whole number), or 1.25, 1.5, 1.75, or 4.5" },
 #ifndef DISABLE_EFFECTS
    { "effect", "ef", rc_int, &user_effect, "0", SYSDEP_DISPLAY_EFFECT_NONE, SYSDEP_DISPLAY_EFFECT_SCAN_V - 1, NULL, "Video effect:\n"
 #else

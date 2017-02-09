@@ -57,7 +57,7 @@ else
 LIBS.svgafx     = $(X11LIB) -lvga -lvgagl -lglide3
 endif
 LIBS.openstep	= -framework AppKit
-LIBS.SDL	= $(X11LIB) -lSDL_gfx `$(SDL_CONFIG) --libs`
+LIBS.SDL	= $(X11LIB) `$(SDL_CONFIG) --libs`
 LIBS.photon2	= -L/usr/lib -lph -lphrender
 
 CFLAGS.x11      = $(X11INC) $(XINPUT_DEVICES_CFLAGS) $(XINERAMA_CFLAGS)
