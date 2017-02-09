@@ -55,7 +55,7 @@ INLINE void FUNC_NAME(blit_normal_line_x)(SRC_PIXEL *src,
 }
 
 BLIT_BEGIN(blit_normal)
-  switch(sysdep_display_params.widthscale)
+  switch((int)sysdep_display_params.widthscale)
   {
     case 1:
       BLIT_LOOP_YARBSIZE(blit_normal_line_1)
@@ -69,7 +69,7 @@ BLIT_BEGIN(blit_normal)
 BLIT_END
 
 BLIT_BEGIN(blit_fakescan_h)
-  switch(sysdep_display_params.widthscale)
+  switch((int)sysdep_display_params.widthscale)
   {
     case 1:
       BLIT_LOOP_FAKESCAN(blit_normal_line_1)

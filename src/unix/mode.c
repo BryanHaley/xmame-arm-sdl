@@ -38,9 +38,9 @@ struct rc_option mode_opts[] = {
    { "disablemode",	"dm",			rc_use_function, NULL,
      NULL,		0,			0,		mode_disable,
      "Don't use mode XRESxYRESxDEPTH this can be used to disable specific video modes which don't work on your system. The xDEPTH part of the string is optional and can be set to 15,16,24 and 32. This option may be used more then once" },
-   { "forcemode",	"fm",			rc_use_function, NULL,
+   /*{ "forcemode",	"fm",			rc_use_function, NULL,
      NULL,		0,			0,		mode_force,
-     "Force use of mode XRESxYRESxDEPTH The DEPTH can be to 15,16,24 and 32." },
+     "Force use of mode XRESxYRESxDEPTH The DEPTH can be to 15,16,24 and 32." },*/
    { NULL,		NULL,			rc_end,		NULL,
      NULL,		0,			0,		NULL,
      NULL }

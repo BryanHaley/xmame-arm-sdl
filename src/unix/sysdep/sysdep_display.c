@@ -103,7 +103,7 @@ static void sysdep_display_set_params(const struct sysdep_display_open_params *p
     if (sysdep_display_params.aspect_ratio != 0.0)
       sysdep_display_params.aspect_ratio = 1.0 / sysdep_display_params.aspect_ratio;
   }
-  
+
   /* The blit code sometimes needs width and x offsets to be aligned:
     -YUY2 blits blit 2 pixels at a time and thus needs an X-alignment of 2
     -packed_pixel blits blit 4 pixels to 3 longs, thus an X-alignment of 4 

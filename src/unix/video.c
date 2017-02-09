@@ -47,8 +47,8 @@ static int video_ror;
 static int video_rol;
 static int video_autoror;
 static int video_autorol;
-static int user_widthscale;
-static int user_heightscale;
+static float user_widthscale;
+static float user_heightscale;
 static int user_yarbsize;
 static int user_effect;
 
@@ -109,15 +109,15 @@ struct rc_option video_opts[] = {
    { "arbheight",	"ah",			rc_int,		&user_yarbsize,
      "0",		0,			4096,		NULL,
      "Scale video to exactly this height (0 = disable), this overrides the heightscale and scale options" },
-   { "widthscale",	"ws",			rc_int,		&user_widthscale,
-     "1",		1,			8,		NULL,
+   { "widthscale",	"ws",			rc_float,   	&user_widthscale,
+     "1",		0.75f,			8,		NULL,
      "Set X-Scale factor (increase: left-shift + insert, decrease: left-shift + delete)" },
-   { "heightscale",	"hs",			rc_int,		&user_heightscale,
-     "1",		1,			8,		NULL,
+   { "heightscale",	"hs",			rc_float,   	&user_heightscale,
+     "1",		0.75f,			8,		NULL,
      "Set Y-Scale factor (increase: left-shift + home, decrease: left-shift + end)" },
    { "scale",		"s",			rc_use_function, NULL,
-     NULL,		0,			0,		video_handle_scale,
-     "Set X- and Y-Scale to the same factor (increase: left-shift + page-up, decrease: left-shift + page-down)" },
+     NULL,		0.75f,			8,		video_handle_scale,
+     "Set X- and Y-Scale to the same factor. Valid inputs are any integer (whole number), or 0.75, 1.25, 1.5, 1.75, or 4.5" },
 #ifndef DISABLE_EFFECTS
    { "effect", "ef", rc_int, &user_effect, "0", SYSDEP_DISPLAY_EFFECT_NONE, SYSDEP_DISPLAY_EFFECT_SCAN_V - 1, NULL, "Video effect:\n"
 #else
@@ -498,6 +498,7 @@ int osd_create_display(const osd_create_params *params,
 				user_widthscale *= 2;
 		}
 	}
+
 	/* Verify current usersettings versus effect and try to keep aspect. */
 	update_effect();
 	/* Update usersettings with definitive results. */
@@ -1412,7 +1413,7 @@ const char *osd_get_fps_text(const performance_info *performance)
 	if (show_effect_or_scale)
 	{
           show_effect_or_scale--;
-          i = snprintf(dest, bufsize, "\n%s (%dx%d)",
+          i = snprintf(dest, bufsize, "\n%s (%fx%f)",
             sysdep_display_effect_properties[normal_params.effect].name,
             normal_params.widthscale, normal_params.heightscale);
 	  if ((i < 0) || (i >= (bufsize-1)))

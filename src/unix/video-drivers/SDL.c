@@ -44,25 +44,28 @@ static SDL_Surface* video_surface = NULL;
 static int startx, starty;
 static blit_func_p blit_func;
 static int scaled_height, scaled_width;
+static int best_bpp, best_width, best_height;
 static int first_update;
 static int sdl_input_grabbed = SDL_GRAB_OFF;
+static int mode_is_forced;
 
 /* options, these get initialised by the rc-code */
 static int sdl_grab_input;
 static int sdl_show_cursor;
 static int sdl_always_use_mouse;
 static int doublebuf;
-static int sdl_stretch;
 
 static int sdl_mapkey(struct rc_option *option, const char *arg, int priority);
+static int sdl_mode_force(struct rc_option *option, const char *s, int priority);
 
 struct rc_option sysdep_display_opts[] = {
   /* name, shortname, type, dest, deflt, min, max, func, help */
   { NULL, NULL, rc_link, aspect_opts, NULL, 0, 0, NULL, NULL },
   { "SDL Related", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
+  { "forcemode", "fm", rc_use_function, NULL, NULL, 0, 0, sdl_mode_force,
+    "Force SDL to use mode XRESxYRESxDEPTH. The DEPTH can be to 15,16,24 and 32." },
   { "doublebuf", NULL, rc_bool, &doublebuf, "1", 0, 0, NULL,
     "Use double buffering to reduce flicker/tearing" },
-  { "stretch", NULL, rc_bool, &sdl_stretch, "0", 0, 0, NULL, "Use SDL to stretch the image to fill the screen"},
   { "grabinput", "gi", rc_bool, &sdl_grab_input, "0", 0, 0, NULL, "Select input grabbing (left-ctrl + delete)" },
   { "alwaysusemouse", "aum", rc_bool, &sdl_always_use_mouse, "0", 0, 0, NULL, "Always use mouse movements as input, even when not grabbed and not fullscreen (default disabled)" },
   { "cursor", "cu", rc_bool, &sdl_show_cursor, "1", 0, 0, NULL, "Show/don't show the cursor" },
@@ -74,6 +77,8 @@ struct rc_option sysdep_display_opts[] = {
 
 int sysdep_display_init(void)
 {
+  mode_is_forced = 0;
+
   memset(sysdep_display_properties.mode_info, 0,
     SYSDEP_DISPLAY_VIDEO_MODES * sizeof(int));
   sysdep_display_properties.mode_info[0] = SYSDEP_DISPLAY_WINDOWED | 
@@ -100,6 +105,43 @@ static int SDL_calc_depth(const SDL_PixelFormat *pixel_format)
     (8 - pixel_format->Bloss));
 }
 
+struct sdl_mode
+{
+   unsigned int width;
+   unsigned int height;
+   int depth;
+};
+
+static struct sdl_mode forced_mode;
+
+static int sdl_mode_force(struct rc_option *option, const char *s, int priority)
+{
+   if (sscanf(s, "%ux%ux%d",
+       &forced_mode.width,
+       &forced_mode.height,
+       &forced_mode.depth) != 3)
+   {
+      fprintf(stderr, "Error: %s is not a valid mode\n", s);
+      return 1;
+   }
+   switch (forced_mode.depth)
+   {
+      case 0:
+      case 15:
+      case 16:
+      case 24:
+      case 32:
+         break;
+      default:
+         fprintf(stderr, "Error no such depth: %d.\n",
+            forced_mode.depth);
+         return 1;
+   }
+   option->priority = priority;
+   mode_is_forced = 1;
+   return 0;
+}
+
 int sysdep_display_driver_open(int reopen)
 {
   int i,j;
@@ -107,7 +149,8 @@ int sysdep_display_driver_open(int reopen)
   SDL_PixelFormat pixel_format;
   const SDL_VideoInfo* video_info;
   int video_flags, score, best_window = 0;
-  int best_bpp = 0, best_width = 0, best_height = 0, best_score = 0;
+  best_bpp = 0; best_width = 0; best_height = 0;
+  int best_score = 0;
   static int firsttime = 1;
   
   if (reopen)
@@ -128,7 +171,7 @@ int sysdep_display_driver_open(int reopen)
     sysdep_display_params.widthscale;
   sysdep_display_properties.max_width  = 0;
   sysdep_display_properties.max_height = 0;
-  
+
   for (i=0; i<5; i++)
   {
     /* We can't ask SDL which pixel formats are available, so we
@@ -279,26 +322,26 @@ int sysdep_display_driver_open(int reopen)
       (video_surface->h != best_height) ||
       (video_surface->format->BitsPerPixel != best_bpp))
   {
-    if (!sdl_stretch)
+    if (mode_is_forced)
     {
-        if(! (video_surface = SDL_SetVideoMode(best_width, best_height, best_bpp,
-                video_flags)))
-        {
-            fprintf (stderr, "SDL: Error: Setting video mode failed\n");
-            return 1;
-        }
+        best_width = (int) forced_mode.width;
+        best_height = (int) forced_mode.height;
+        best_bpp = (int) forced_mode.depth;
     }
-    else
+    
+    if(! (video_surface = SDL_SetVideoMode(best_width, best_height, best_bpp,
+            video_flags)))
     {
-        if (! (video_surface = SDL_SetVideoMode(vid_modes[j]->w, vid_modes[j]->h,
-                best_bpp, video_flags)))
-        {
-            fprintf (stderr, "SDL: Error: Setting video mode failed (stretch enabled)\n");
-            return 1;
-        }
+        fprintf (stderr, "SDL: Error: Setting video mode (%dx%dx%d) failed\n",
+                best_width, best_height, best_bpp);
+        return 1;
     }
-    fprintf(stderr, "SDL: Using a mode with a resolution of: %dx%dx%d\n",
-      best_width, best_height, best_bpp);
+
+    fprintf(stderr, "SDL: Using a mode with a resolution of : %dx%dx%d\n",
+        best_width, best_height, best_bpp);
+   
+    //fprintf(stderr, "SDL: video surface is size %dx%d\n", video_surface->w, video_surface->h);
+
     if(!best_window)
     {
       mode_set_aspect_ratio((double)best_width / best_height);
@@ -338,12 +381,6 @@ int sysdep_display_driver_open(int reopen)
   starty = (video_surface->h - scaled_height) / 2;
   if (video_surface->flags & SDL_HWSURFACE)
     startx &= ~3;
-
-  if (sdl_stretch)
-  {
-    startx = 0;
-    starty = 0;
-  }
 
   /* clear the unused area of the screen */
   for (i=0; i<2; i++)
@@ -441,29 +478,29 @@ const char *sysdep_display_update(mame_bitmap *bitmap,
   {
     *dirty_area = *vis_in_dest_out;
     first_update = 0;
-  }  
+  }
 
   SDL_LockSurface(video_surface);
 
   video_mem = video_surface->pixels;
   video_mem += startx * video_surface->format->BytesPerPixel;
   video_mem += starty * video_surface->pitch;
-    
+  
   blit_func(bitmap, vis_in_dest_out, dirty_area, palette, video_mem,
     video_surface->pitch/video_surface->format->BytesPerPixel);
-
+  
   SDL_UnlockSurface(video_surface);
 
   if (video_surface->flags & SDL_DOUBLEBUF)
     SDL_Flip(video_surface);
-  else if(!(video_surface->flags & SDL_HWSURFACE))
+  else if (!(video_surface->flags & SDL_HWSURFACE))
   {
     SDL_Rect drect;
     drect.x = startx + vis_in_dest_out->min_x;
     drect.y = starty + vis_in_dest_out->min_y;
     drect.w = vis_in_dest_out->max_x - vis_in_dest_out->min_x;
     drect.h = vis_in_dest_out->max_y - vis_in_dest_out->min_y;
-    SDL_UpdateRects(video_surface,1, &drect);
+    SDL_UpdateRects(video_surface, 1, &drect);
   }
   
   if ((flags & SYSDEP_DISPLAY_HOTKEY_GRABMOUSE) &&

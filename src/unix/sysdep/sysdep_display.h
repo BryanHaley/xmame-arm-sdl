@@ -174,8 +174,8 @@ struct sysdep_display_open_params {
      which one to use */
   int video_mode;
   /* scaling and effect options */
-  int widthscale;
-  int heightscale;
+  float widthscale;
+  float heightscale;
   int yarbsize;
   int effect;
   int fullscreen;
