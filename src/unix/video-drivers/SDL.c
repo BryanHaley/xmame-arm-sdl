@@ -52,6 +52,7 @@ static int sdl_grab_input;
 static int sdl_show_cursor;
 static int sdl_always_use_mouse;
 static int doublebuf;
+static int sdl_stretch;
 
 static int sdl_mapkey(struct rc_option *option, const char *arg, int priority);
 
@@ -61,6 +62,7 @@ struct rc_option sysdep_display_opts[] = {
   { "SDL Related", NULL, rc_seperator, NULL, NULL, 0, 0, NULL, NULL },
   { "doublebuf", NULL, rc_bool, &doublebuf, "1", 0, 0, NULL,
     "Use double buffering to reduce flicker/tearing" },
+  { "stretch", NULL, rc_bool, &sdl_stretch, "0", 0, 0, NULL, "Use SDL to stretch the image to fill the screen"},
   { "grabinput", "gi", rc_bool, &sdl_grab_input, "0", 0, 0, NULL, "Select input grabbing (left-ctrl + delete)" },
   { "alwaysusemouse", "aum", rc_bool, &sdl_always_use_mouse, "0", 0, 0, NULL, "Always use mouse movements as input, even when not grabbed and not fullscreen (default disabled)" },
   { "cursor", "cu", rc_bool, &sdl_show_cursor, "1", 0, 0, NULL, "Show/don't show the cursor" },
@@ -277,11 +279,23 @@ int sysdep_display_driver_open(int reopen)
       (video_surface->h != best_height) ||
       (video_surface->format->BitsPerPixel != best_bpp))
   {
-    if(! (video_surface = SDL_SetVideoMode(best_width, best_height, best_bpp,
-            video_flags)))
+    if (!sdl_stretch)
     {
-      fprintf (stderr, "SDL: Error: Setting video mode failed\n");
-      return 1;
+        if(! (video_surface = SDL_SetVideoMode(best_width, best_height, best_bpp,
+                video_flags)))
+        {
+            fprintf (stderr, "SDL: Error: Setting video mode failed\n");
+            return 1;
+        }
+    }
+    else
+    {
+        if (! (video_surface = SDL_SetVideoMode(vid_modes[j]->w, vid_modes[j]->h,
+                best_bpp, video_flags)))
+        {
+            fprintf (stderr, "SDL: Error: Setting video mode failed (stretch enabled)\n");
+            return 1;
+        }
     }
     fprintf(stderr, "SDL: Using a mode with a resolution of: %dx%dx%d\n",
       best_width, best_height, best_bpp);
@@ -324,6 +338,12 @@ int sysdep_display_driver_open(int reopen)
   starty = (video_surface->h - scaled_height) / 2;
   if (video_surface->flags & SDL_HWSURFACE)
     startx &= ~3;
+
+  if (sdl_stretch)
+  {
+    startx = 0;
+    starty = 0;
+  }
 
   /* clear the unused area of the screen */
   for (i=0; i<2; i++)
