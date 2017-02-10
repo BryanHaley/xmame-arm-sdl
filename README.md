@@ -25,7 +25,7 @@
  
 **RUN**
  
- Run games the same way you would MAME 0.106 via the command line. Theoritically, it may even be compatible with existing MAME front-ends, provided they can be successfully built on armhf Debian. I have not tested any at this time.
+ Run games the same way you would MAME 0.106 via the command line. Theoretically, it may even be compatible with existing MAME front-ends, provided they can be successfully built on armhf Debian. I have not tested any at this time.
  
  You can download a free, noncommercial ROM from mame.net to test. For example:
  
@@ -37,30 +37,32 @@
  
  `./xmame.SDL ./supertnk.zip`
  
- Many of the commandline arguments for MAME 0.106 *should* work. Run './xmame.SDL -help | more' to see them.
+ Many of the commandline arguments for MAME 0.106 *should* work (many others do not, however). Run `./xmame.SDL -help | more` to see them.
  
  Of particular note:
 + Use `-fullscreen` to run the game in fullscreen mode.
-+ Use `-scale <int>` (e.g. '-scale 2') to scale the display (see known issues).
++ Use `-scale <float>` (e.g. '-scale 1.5') to scale the display (see known issues).
 + Use `-fsr 1` to enable the enhanced frameskipper. This can reduce slowdown in some games.
 + Use `-joytype 5` to enable the usage of SDL-compatible gamepads/controllers/etc.
  
 So, for example:
  
- `./xmame.SDL -fullscreen -fsr 1 ./supertnk.zip`
+ `./xmame.SDL ./supertnk.zip -fullscreen -fsr 1`
  
-Or, if you have a large enough display (e.g. over VGA or HDMI):
+Or, to fill more of the screen:
  
- `./xmame.SDL -fullscreen -scale 2 -fsr 1 ./supertnk.zip`
+ `./xmame.SDL ./supertnk.zip -fullscreen -scale 1.5 -fsr 1 `
  
 **KNOWN ISSUES**
  
- * Sound is relatively quiet by default. Turn your volume up and/or boost the volume within MAME. I will investigate a better fix later.
- * Scaling the game display to a higher resolution than your CHIP is running at will cause an exception. In addition, currently the game display can only scale by integer values. This is particularly a problem on composite displays, as most games run at a resolution just slightly higher than half the CHIP's resolution, meaning they cannot be scaled up and also only take up a relatively small amount of the screen (see planned features). Therefore, use VGA or HDMI if possible, or don't use fullscreen mode.
+ * Sound is relatively quiet by default. Turn your volume up and/or boost the volume within MAME. I will investigate a better fix later. UPDATE: The issue is caused by this fork of MAME’s outdated sound code looking for an OSS Mixer (which only has legacy support on Linux and does not seem to be present on the CHIP). I am looking into solutions.
+ * Scaling the game display to a higher resolution than your CHIP is running at will cause an exception. ~~In addition, currently the game display can only scale by integer values. This is particularly a problem on composite displays, as most games run at a resolution just slightly higher than half the CHIP's resolution, meaning they cannot be scaled up and also only take up a relatively small amount of the screen (see planned features). Therefore, use VGA or HDMI if possible, or don't use fullscreen mode.~~ Fixed.
+ * While scaling up by non-integer values has been implemented, scaling down by non-integer values (e.g. 0.75) is not yet working. If you’re on composite, I strongly suggest running the chip in 720x480 mode if possible; very few, if any, games will exceed a vertical height of 480.
  
 **PLANNED FEATURES**
  
- * Allow non-integer display scaling. Though not ideal as it may make images blurry, this will improve compatibility greatly with composite displays.
+ * ~~Allow non-integer display scaling. Though not ideal as it may make images blurry, this will improve compatibility greatly with composite displays.~~ Added possible non-integer scaling modes of 1.25, 1.5, 1.75, and 4.5. Forcing video modes has also been fixed.
+ * Add an autoscale option to automatically choose the largest scale factor possible without breaking fullscreen.
  * Add the ability to use buttons connected to GPIO pins as in-game inputs.
  
 **NOTE**
